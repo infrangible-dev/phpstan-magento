@@ -1,0 +1,52 @@
+# Rules for the conventions of PhpStorm that PHPStan does not check itself, and @throws tags as PhpStorm expects them.
+# Included by magento.neon; projects without Magento can include this file alone.
+parameters:
+    # every checked exception that a method lets through has to be declared, and not more than that; unchecked are the
+    # same exceptions as in the PhpStorm settings of the Magento modules. The rules below add what PhpStorm checks beyond
+    # that: @throws of the method itself, not only of a parent, and catches of exceptions that no call of the try block
+    # declares
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+        uncheckedExceptionClasses:
+            - Error
+            - LogicException
+            - RuntimeException
+            # PHPUnit declares interfaces like PHPUnit\Framework\MockObject\Exception in @throws of createMock()
+            - PHPUnit\Exception
+rules:
+    # a literal as last argument that is the default value of the parameter
+    - Infrangible\PhpStan\DefaultArgumentRule
+    # a foreach loop that only fills an empty array with one value per element
+    - Infrangible\PhpStan\LoopToArrayMapRule
+    # a constructor that does not call the constructor of its parent class
+    - Infrangible\PhpStan\MissingParentConstructorCallRule
+    # a member of the value of a property that only exists after an instanceof check of the property
+    - Infrangible\PhpStan\NarrowedPropertyAccessRule
+    # a catch of a checked exception that no call of the try block declares
+    - Infrangible\PhpStan\NeverThrownCatchRule
+    # an instanceof check against the only class of the module that implements the declared interface
+    - Infrangible\PhpStan\OnlyImplementationInstanceofRule
+    # checked exceptions declared only in the @throws tag of a parent method
+    - Infrangible\PhpStan\OwnThrowsRule
+    # a cast of a value that already has the type of the cast
+    - Infrangible\PhpStan\RedundantCastRule
+    # a suppression of unused parameters on a method that overrides a parent method or uses all parameters
+    - Infrangible\PhpStan\RedundantUnusedParameterSuppressionRule
+    # an inline @var tag of an assignment with the type that the assigned value already has
+    - Infrangible\PhpStan\RedundantVarTagRule
+    # a test double of PHPUnit created inside a closure
+    - Infrangible\PhpStan\TestDoubleInClosureRule
+    # a parameter that the method does not use, unless the method overrides another one or suppresses it
+    - Infrangible\PhpStan\UnusedParameterRule
+    # a variable that is assigned once and then only passed by value to one closure
+    - Infrangible\PhpStan\VariableOnlyUsedInClosureRule
+services:
+    # the checked exceptions that the PHP stubs of PhpStorm declare, which PHPStan does not know
+    -
+        class: Infrangible\PhpStan\PhpStormThrowTypeExtension
+        tags:
+            - phpstan.dynamicFunctionThrowTypeExtension
+            - phpstan.dynamicMethodThrowTypeExtension
+            - phpstan.dynamicStaticMethodThrowTypeExtension

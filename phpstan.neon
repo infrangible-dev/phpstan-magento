@@ -1,0 +1,10 @@
+# Analysis of the rules with themselves; bootstrap.php and versions.php need a Magento installation and are checked by
+# tools/check-code-conventions.sh of https://github.com/infrangible-dev/workflows instead.
+#   composer install && vendor/bin/phpstan analyse
+includes:
+    - rules.neon
+parameters:
+    level: 9
+    paths:
+        - src
+    checkUninitializedProperties: true

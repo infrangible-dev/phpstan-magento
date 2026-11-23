@@ -1,0 +1,48 @@
+# Configuration of PHPStan for Magento modules: level 9, the rules of rules.neon, the classes that Magento generates and
+# the differences between the Magento versions. The phpstan.neon of a module includes it from the Magento installation
+# next to the module and adds its paths:
+#
+#   includes:
+#       - ../magento/vendor/infrangible/phpstan-magento/magento.neon
+#   parameters:
+#       paths:
+#           - src
+#
+# The Magento installation is taken from the environment variable MAGENTO_ROOT, by default /var/www/magento of the
+# Anodosys development environment. Run PHPStan of the installation:
+#   cd /var/www/magento && vendor/bin/phpstan analyse -c /var/www/module/phpstan.neon
+includes:
+    - rules.neon
+    # findings that depend on the Magento version
+    - versions.php
+parameters:
+    level: 9
+    bootstrapFiles:
+        # generates factories and extension attributes on the fly, as in Magento's own static tests
+        - bootstrap.php
+    # typed properties have to be set before they are read: a property without default value that is set neither in the
+    # constructor nor in one of the methods that Magento and PHPUnit call like a constructor fails with an Error when it
+    # is read (for example the subject of a mail that was never set)
+    checkUninitializedProperties: true
+    additionalConstructors:
+        - PHPUnit\Framework\TestCase::setUp
+        - Magento\Framework\View\Element\AbstractBlock::_construct
+        - Magento\Framework\Model\AbstractModel::_construct
+        - Magento\Framework\Model\ResourceModel\AbstractResource::_construct
+        - Magento\Framework\Data\Collection\AbstractDb::_construct
+    exceptions:
+        uncheckedExceptionClasses:
+            # thrown by Magento\Framework\DB\Select for invalid parts of a query, a programming error
+            - Zend_Db_Select_Exception
+    ignoreErrors:
+        # the tests use attributes of newer PHPUnit versions (DataProvider: 10+, AllowMockObjectsWithoutExpectations:
+        # 12.5+), which older versions ignore; Magento 2.4.6 comes with PHPUnit 9
+        -
+            message: '#^Attribute class PHPUnit\\Framework\\Attributes\\(DataProvider|AllowMockObjectsWithoutExpectations) does not exist\.$#'
+            reportUnmatched: false
+        # tests that use reflection on classes they name themselves: PhpStorm requires the ReflectionException in
+        # @throws, PHPStan knows that it cannot be thrown for an existing class; production code stays strict (the
+        # namespace instead of a path, which would be relative to this file)
+        -
+            message: '#^Method [\w\\]+\\Test\\[\w\\]+::\w+\(\) has ReflectionException in PHPDoc @throws tag but it''s not thrown\.$#'
+            reportUnmatched: false

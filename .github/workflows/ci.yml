@@ -1,0 +1,133 @@
+# Checks the rules with every PHPStan version they support and releases the version from composer.json when the checks
+# pass on the default branch.
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: PHP ${{ matrix.php }} / PHPStan ${{ matrix.phpstan }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Magento 2.4.6 to 2.4.9 come with PHPStan 1 (PHP 8.2 to 8.5)
+          - {php: "8.2", phpstan: "~1.12.0"}
+          - {php: "8.5", phpstan: "~1.12.0"}
+          - {php: "8.5", phpstan: "~2.3.0", conventions: true}
+    steps:
+      - name: Check out package
+        uses: actions/checkout@v7
+        with:
+          path: package
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+
+      - name: Install PHPStan ${{ matrix.phpstan }}
+        working-directory: package
+        run: composer require --no-interaction --no-progress "phpstan/phpstan:${{ matrix.phpstan }}"
+
+      - name: Static analysis
+        working-directory: package
+        # the rules analyse themselves
+        run: vendor/bin/phpstan analyse --no-progress
+
+      - name: Check out shared tools
+        if: matrix.conventions
+        uses: actions/checkout@v7
+        with:
+          repository: infrangible-dev/workflows
+          path: workflows
+
+      - name: Code conventions
+        if: matrix.conventions
+        # findings PhpStorm reports that PHPStan does not check, also in bootstrap.php and versions.php
+        run: workflows/tools/check-code-conventions.sh package
+
+      - name: PHP 8.2 syntax
+        if: matrix.conventions
+        run: |
+          # Rector reports code that the syntax of PHP 8.2 writes shorter, with the dependencies of the package
+          mkdir -p "${RUNNER_TEMP}/rector"
+          composer require --no-interaction --no-progress --working-dir "${RUNNER_TEMP}/rector" "rector/rector:~2.8.0"
+          workflows/tools/check-php-syntax.sh package package "${RUNNER_TEMP}/rector/vendor/bin/rector"
+
+      - name: Duplicated code
+        if: matrix.conventions
+        run: |
+          mkdir -p "${RUNNER_TEMP}/phpcpd"
+          composer require --no-interaction --no-progress --working-dir "${RUNNER_TEMP}/phpcpd" "systemsdk/phpcpd:~9.2.0"
+          workflows/tools/check-duplicated-code.sh package "${RUNNER_TEMP}/phpcpd/vendor/bin/phpcpd"
+
+  release:
+    name: Release
+    needs: checks
+    if: github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    concurrency:
+      group: release-${{ github.repository }}
+    steps:
+      - name: Check out package
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Release version from composer.json
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(jq -r '.version // empty' composer.json)
+          if [[ -z "${version}" ]]; then
+            echo "::notice::No version in composer.json, nothing to release"
+            exit 0
+          fi
+          if [[ ! "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Version ${version} in composer.json is no plain semantic version (major.minor.patch)"
+            exit 1
+          fi
+          if git rev-parse --quiet --verify "refs/tags/${version}" >/dev/null; then
+            echo "::notice::Version ${version} is already released"
+            exit 0
+          fi
+
+          latestVersion=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+          if [[ -n "${latestVersion}" ]] && [[ $(printf '%s\n%s\n' "${latestVersion}" "${version}" | sort -V | tail -n 1) != "${version}" ]]; then
+            echo "::error::Version ${version} in composer.json is lower than the latest release ${latestVersion}"
+            exit 1
+          fi
+
+          # the section "## <version>" of CHANGELOG.md, up to the next section of the same level
+          notes=""
+          if [[ -f CHANGELOG.md ]]; then
+            notes=$(awk -v version="${version}" '
+              /^## / { if (found) exit; if ($2 == version) { found = 1; next } }
+              found { print }
+            ' CHANGELOG.md)
+          fi
+          if [[ -z "${notes//[[:space:]]/}" ]]; then
+            echo "::warning::No section for version ${version} in CHANGELOG.md"
+            notes="Release ${version}"
+          fi
+          printf '%s\n' "${notes}" > release-notes.md
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${version}" -m "${version}" "${GITHUB_SHA}"
+          git push origin "refs/tags/${version}"
+          gh release create "${version}" --verify-tag --title "${version}" --notes-file release-notes.md
+          echo "::notice::Released ${version}"
