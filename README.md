@@ -104,6 +104,10 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `MissingParentConstructorCallRule`: a constructor that does not call the constructor of its parent class ("Missing
   parent constructor call"; skipping it on purpose needs `@noinspection PhpMissingParentConstructorInspection` with a
   reason)
+- `RepeatedAssertionRule`: `assertTrue()`, `assertFalse()`, `assertNull()` or `assertNotNull()` of a method call like
+  `$object->isX()` that was already asserted, without any use of `$object` in between ("Assertion is always 'false'
+  because '$this->assertTrue($object->isX())' is already 'true' at this point"; PhpStorm does not see changes through
+  other objects, assert the state through the object that changed it)
 
 `PhpStormThrowTypeExtension` adds the checked exceptions that the PHP stubs of PhpStorm declare to PHP's functions and
 methods, for example `DOMException` of `DOMDocument::saveXML()`, so that missing `@throws` tags are reported as in

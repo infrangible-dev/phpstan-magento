@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+
+- `RepeatedAssertionRule`: an assertion of a method call that repeats an earlier assertion of the same call without
+  any use of the object in between, which PhpStorm reports as always true or false.
+
 ## 1.0.0
 
 First release: the PHPStan configuration and rules that the Infrangible Magento modules had as copies of the

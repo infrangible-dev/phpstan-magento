@@ -32,6 +32,8 @@ rules:
     - Infrangible\PhpStan\OwnThrowsRule
     # a cast of a value that already has the type of the cast
     - Infrangible\PhpStan\RedundantCastRule
+    # an assertion of a method call that repeats an earlier one without any use of the object in between
+    - Infrangible\PhpStan\RepeatedAssertionRule
     # a suppression of unused parameters on a method that overrides a parent method or uses all parameters
     - Infrangible\PhpStan\RedundantUnusedParameterSuppressionRule
     # an inline @var tag of an assignment with the type that the assigned value already has
