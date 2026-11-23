@@ -56,8 +56,10 @@ class RepeatedAssertionRule implements Rule
 
         foreach ($node->stmts ?? [] as $statement) {
             $call = $this->getAssertedCall($statement);
+            $object = $call?->var;
+            $name = $object instanceof Expr\Variable ? $object->name : null;
 
-            if ($call !== null && $call->var instanceof Expr\Variable && is_string($call->var->name)) {
+            if ($call !== null && is_string($name)) {
                 $key = $printer->prettyPrintExpr($call);
 
                 if (array_key_exists($key, $asserted)) {
@@ -66,12 +68,12 @@ class RepeatedAssertionRule implements Rule
                             'PhpStorm reports this assertion as always true or false: %s was already asserted, ' .
                             'and $%s is not used in between. Assert the state through the object that changed it.',
                             $key,
-                            $call->var->name
+                            $name
                         )
                     )->identifier('infrangible.repeatedAssertion')->line($statement->getStartLine())->build();
                 }
 
-                $asserted[$key] = $call->var->name;
+                $asserted[$key] = $name;
 
                 continue;
             }
@@ -94,6 +96,10 @@ class RepeatedAssertionRule implements Rule
 
     /**
      * Returns the method call of a statement like $this->assertTrue($object->method()).
+     *
+     * @param Stmt $statement
+     *
+     * @return Expr\MethodCall|null
      */
     private function getAssertedCall(Stmt $statement): ?Expr\MethodCall
     {
@@ -103,10 +109,13 @@ class RepeatedAssertionRule implements Rule
 
         $assertion = $statement->expr;
 
-        if (! ($assertion instanceof Expr\MethodCall || $assertion instanceof Expr\StaticCall) ||
-            ! $assertion->name instanceof Node\Identifier ||
-            ! in_array($assertion->name->toLowerString(), self::ASSERTIONS, true)) {
+        if (! ($assertion instanceof Expr\MethodCall || $assertion instanceof Expr\StaticCall)) {
+            return null;
+        }
 
+        $method = $assertion->name;
+
+        if (! $method instanceof Node\Identifier || ! in_array($method->toLowerString(), self::ASSERTIONS, true)) {
             return null;
         }
 
