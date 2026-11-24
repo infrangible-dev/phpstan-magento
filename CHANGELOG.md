@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1
+
+### Fixed
+
+- `RedundantCastRule` did not report casts of the result of magic methods of `@method` tags, for example
+  `(bool)$dataObject->getResult()` with `@method bool getResult()`, which PhpStorm reports as redundant.
+
 ## 1.1.0
 
 ### Added

@@ -165,7 +165,8 @@ class RedundantCastRule implements Rule
     }
 
     /**
-     * Checks if the expression calls a method with a body, which is not abstract and not declared in an interface.
+     * Checks if the expression calls a method with a body: not abstract, not declared in an interface and not a magic
+     * method of a @method tag.
      *
      * @param Expr $expression
      * @param Scope $scope
@@ -199,6 +200,7 @@ class RedundantCastRule implements Rule
         $abstract = $method->isAbstract();
 
         return ! $method->getDeclaringClass()->isInterface() &&
+            $method->getDeclaringClass()->hasNativeMethod($name->toString()) &&
             ! ($abstract instanceof TrinaryLogic ? $abstract->yes() : $abstract);
     }
 
