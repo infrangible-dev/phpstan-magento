@@ -20,6 +20,8 @@ rules:
     - Infrangible\PhpStan\DefaultArgumentRule
     # a foreach loop that only fills an empty array with one value per element
     - Infrangible\PhpStan\LoopToArrayMapRule
+    # a method without native return type, unless it returns a resource
+    - Infrangible\PhpStan\MissingReturnTypeRule
     # a constructor that does not call the constructor of its parent class
     - Infrangible\PhpStan\MissingParentConstructorCallRule
     # a member of the value of a property that only exists after an instanceof check of the property

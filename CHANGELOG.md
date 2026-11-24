@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+
+- `MissingReturnTypeRule`: a method without native return type, which PhpStorm reports as "Missing function's return
+  type declaration". Constructors, destructors, `__clone()` and methods that return a resource are not reported.
+
 ## 1.1.1
 
 ### Fixed

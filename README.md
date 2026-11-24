@@ -108,6 +108,8 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
   `$object->isX()` that was already asserted, without any use of `$object` in between ("Assertion is always 'false'
   because '$this->assertTrue($object->isX())' is already 'true' at this point"; PhpStorm does not see changes through
   other objects, assert the state through the object that changed it)
+- `MissingReturnTypeRule`: a method without native return type, also in interfaces and traits ("Missing function's
+  return type declaration"; not for constructors, destructors, `__clone()` and methods that return a resource).
 
 `PhpStormThrowTypeExtension` adds the checked exceptions that the PHP stubs of PhpStorm declare to PHP's functions and
 methods, for example `DOMException` of `DOMDocument::saveXML()`, so that missing `@throws` tags are reported as in
