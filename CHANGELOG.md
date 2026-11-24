@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+### Added
+
+- `OverwrittenAssignmentRule`: an assignment to a variable whose value is overwritten before it is read, which
+  PhpStorm reports as "Unused local variable. The value of the variable is overwritten immediately".
+
 ## 1.2.0
 
 ### Added

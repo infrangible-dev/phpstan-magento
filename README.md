@@ -108,6 +108,9 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
   `$object->isX()` that was already asserted, without any use of `$object` in between ("Assertion is always 'false'
   because '$this->assertTrue($object->isX())' is already 'true' at this point"; PhpStorm does not see changes through
   other objects, assert the state through the object that changed it)
+- `OverwrittenAssignmentRule`: an assignment to a variable whose value is overwritten before it is read ("Unused local
+  variable. The value of the variable is overwritten immediately"): the next statement that uses the variable assigns
+  it, or the first statement of a loop body that uses it assigns it and the variable is not used after the loop.
 - `MissingReturnTypeRule`: a method without native return type, also in interfaces and traits ("Missing function's
   return type declaration"; not for constructors, destructors, `__clone()` and methods that return a resource).
 

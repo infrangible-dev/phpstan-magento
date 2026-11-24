@@ -22,6 +22,8 @@ rules:
     - Infrangible\PhpStan\LoopToArrayMapRule
     # a method without native return type, unless it returns a resource
     - Infrangible\PhpStan\MissingReturnTypeRule
+    # an assignment to a variable whose value is overwritten before it is read
+    - Infrangible\PhpStan\OverwrittenAssignmentRule
     # a constructor that does not call the constructor of its parent class
     - Infrangible\PhpStan\MissingParentConstructorCallRule
     # a member of the value of a property that only exists after an instanceof check of the property
