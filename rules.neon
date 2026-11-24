@@ -47,6 +47,19 @@ rules:
     # a variable that is assigned once and then only passed by value to one closure
     - Infrangible\PhpStan\VariableOnlyUsedInClosureRule
 services:
+    # throws tags with ReflectionException on test methods that call nothing which declares it, like PhpStorm judges
+    -
+        class: Infrangible\PhpStan\ReflectionThrowsTagCollector
+        tags:
+            - phpstan.collector
+    -
+        class: Infrangible\PhpStan\ReflectionThrowingCallCollector
+        tags:
+            - phpstan.collector
+    -
+        class: Infrangible\PhpStan\UnthrownReflectionExceptionRule
+        tags:
+            - phpstan.rules.rule
     # a cast of a value that already has the type of the cast; it reads the bodies of called methods with the parser
     -
         class: Infrangible\PhpStan\RedundantCastRule

@@ -112,6 +112,10 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `OverwrittenAssignmentRule`: an assignment to a variable whose value is overwritten before it is read ("Unused local
   variable. The value of the variable is overwritten immediately"): the next statement that uses the variable assigns
   it, or the first statement of a loop body that uses it assigns it and the variable is not used after the loop.
+- `UnthrownReflectionExceptionRule` (with `ReflectionThrowsTagCollector` and `ReflectionThrowingCallCollector`):
+  `ReflectionException` in the throws tag of a test method that calls nothing which declares it ("Exception
+  'ReflectionException' is never thrown in the function"); PHPStan's own check of these tags is off for tests, since it
+  narrows reflection of named classes, which PhpStorm does not
 - `MissingReturnTypeRule`: a method without native return type, also in interfaces and traits ("Missing function's
   return type declaration"; not for constructors, destructors, `__clone()` and methods that return a resource).
 

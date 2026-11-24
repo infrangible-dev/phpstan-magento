@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.3
+
+### Added
+
+- `UnthrownReflectionExceptionRule`: `ReflectionException` in the throws tag of a test method that calls nothing which
+  declares it, which PhpStorm reports as "Exception 'ReflectionException' is never thrown in the function". PHPStan's
+  own check stays off for tests, because it narrows reflection of named classes.
+
 ## 1.2.2
 
 ### Fixed
