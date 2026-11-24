@@ -22,6 +22,8 @@ rules:
     - Infrangible\PhpStan\LoopToArrayMapRule
     # a method without native return type, unless it returns a resource
     - Infrangible\PhpStan\MissingReturnTypeRule
+    # an instance created by reflection, returned by a function with a class as native return type
+    - Infrangible\PhpStan\ReflectionInstanceReturnRule
     # an assignment to a variable whose value is overwritten before it is read
     - Infrangible\PhpStan\OverwrittenAssignmentRule
     # a constructor that does not call the constructor of its parent class

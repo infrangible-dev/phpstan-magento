@@ -116,6 +116,9 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
   `ReflectionException` in the throws tag of a test method that calls nothing which declares it ("Exception
   'ReflectionException' is never thrown in the function"); PHPStan's own check of these tags is off for tests, since it
   narrows reflection of named classes, which PhpStorm does not
+- `ReflectionInstanceReturnRule`: an instance created by `ReflectionClass::newInstance()`, `newInstanceArgs()` or
+  `newInstanceWithoutConstructor()`, returned by a function with a class as native return type ("Return value is
+  expected to be 'X', 'object|string' returned"; declare `object` and the class in the return tag)
 - `MissingReturnTypeRule`: a method without native return type, also in interfaces and traits ("Missing function's
   return type declaration"; not for constructors, destructors, `__clone()` and methods that return a resource).
 

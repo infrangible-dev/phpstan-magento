@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.4
+
+### Added
+
+- `ReflectionInstanceReturnRule`: an instance created by reflection that a function with a class as native return
+  type returns, which PhpStorm types as `object|string` and reports as "Return value is expected to be 'X',
+  'object|string' returned".
+
 ## 1.2.3
 
 ### Added
