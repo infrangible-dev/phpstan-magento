@@ -17,6 +17,7 @@ use PhpParser\Node\Stmt;
 use PhpParser\NodeFinder;
 use PHPStan\Analyser\Scope;
 use PHPStan\Parser\Parser;
+use PHPStan\Parser\ParserErrorsException;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\ExtendedMethodReflection;
 use PHPStan\Reflection\ReflectionProvider;
@@ -278,8 +279,14 @@ class RedundantCastRule implements Rule
 
         $className = $class->getName();
 
+        try {
+            $stmts = $this->parser->parseFile($fileName);
+        } catch (ParserErrorsException) {
+            return null;
+        }
+
         $classLike = (new NodeFinder())->findFirst(
-            $this->parser->parseFile($fileName),
+            $stmts,
             fn(Node $found): bool => $found instanceof Stmt\ClassLike && $found->namespacedName !== null &&
                 $found->namespacedName->toString() === $className
         );
