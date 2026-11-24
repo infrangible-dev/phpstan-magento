@@ -47,6 +47,7 @@ class OverwrittenAssignmentRule implements Rule
     public function processNode(Node $node, Scope $scope): array
     {
         $stmts = $node->getStmts();
+        $stmts = $stmts === null ? null : array_values($stmts);
 
         if ($stmts === null || $this->hasDynamicVariables($stmts)) {
             return [];
@@ -157,15 +158,25 @@ class OverwrittenAssignmentRule implements Rule
      */
     private function getAssignedVariable(Stmt $stmt): ?string
     {
-        if (! $stmt instanceof Stmt\Expression || ! $stmt->expr instanceof Expr\Assign ||
-            ! $stmt->expr->var instanceof Expr\Variable || ! is_string($stmt->expr->var->name)) {
-
+        if (! $stmt instanceof Stmt\Expression) {
             return null;
         }
 
-        $name = $stmt->expr->var->name;
+        $assign = $stmt->expr;
 
-        return $name === 'this' || $this->uses($stmt->expr->expr, $name) ? null : $name;
+        if (! $assign instanceof Expr\Assign) {
+            return null;
+        }
+
+        $variable = $assign->var;
+
+        if (! $variable instanceof Expr\Variable) {
+            return null;
+        }
+
+        $name = $variable->name;
+
+        return ! is_string($name) || $name === 'this' || $this->uses($assign->expr, $name) ? null : $name;
     }
 
     /**
@@ -303,15 +314,31 @@ class OverwrittenAssignmentRule implements Rule
      */
     private function hasDynamicVariables(array $stmts): bool
     {
-        return (new NodeFinder())->findFirst(
-            $stmts,
-            fn(Node $node): bool => $node instanceof Expr\AssignRef ||
-                ($node instanceof Expr\Variable && ! is_string($node->name)) ||
-                ($node instanceof Expr\Closure && $this->closureTakes($node, null, true)) ||
-                ($node instanceof Stmt\Foreach_ && $node->byRef) ||
-                ($node instanceof Stmt\Global_) || ($node instanceof Stmt\Static_) ||
-                ($node instanceof Expr\FuncCall && $node->name instanceof Node\Name &&
-                    in_array($node->name->toLowerString(), self::VARIABLE_FUNCTIONS, true))
-        ) !== null;
+        return (new NodeFinder())->findFirst($stmts, fn(Node $node): bool => $this->isDynamicVariable($node)) !== null;
+    }
+
+    /**
+     * Checks if the node is a reference, a variable variable or a call of a function that accesses variables by name.
+     *
+     * @param Node $node
+     *
+     * @return bool
+     */
+    private function isDynamicVariable(Node $node): bool
+    {
+        if ($node instanceof Expr\Variable) {
+            return ! is_string($node->name);
+        }
+
+        if ($node instanceof Expr\FuncCall) {
+            $functionName = $node->name;
+
+            return $functionName instanceof Node\Name &&
+                in_array($functionName->toLowerString(), self::VARIABLE_FUNCTIONS, true);
+        }
+
+        return $node instanceof Expr\AssignRef || $node instanceof Stmt\Global_ || $node instanceof Stmt\Static_ ||
+            ($node instanceof Expr\Closure && $this->closureTakes($node, null, true)) ||
+            ($node instanceof Stmt\Foreach_ && $node->byRef);
     }
 }
