@@ -18,7 +18,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
 /**
- * A method without native return type, also in interfaces and traits; a @return tag in the docblock is not enough.
+ * A method without native return type, also in interfaces and traits; a return tag in the docblock is not enough.
  * PhpStorm reports it as "Missing function's return type declaration". Constructors, destructors and __clone() have no
  * return type, and methods that return a resource (only declared in the docblock, PHP has no type for it) are not
  * reported. A method that overrides an untyped method of Magento may declare a return type, PHP allows it.
