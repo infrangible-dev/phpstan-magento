@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * Magento declares the parent item of a quote item as always set (all versions up to 2.4.9), but items without parent
+ * (all items of simple products, the parents of configurable and bundle products) return null. Used by versions.php
+ * with all versions.
+ */
+
+namespace Magento\Quote\Model\Quote\Item;
+
+abstract class AbstractItem extends \Magento\Framework\Model\AbstractExtensibleModel implements
+    \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface
+{
+    /**
+     * @return \Magento\Quote\Model\Quote\Item|null
+     */
+    public function getParentItem()
+    {
+    }
+}

@@ -57,7 +57,8 @@ cd /var/www/magento && vendor/bin/phpstan analyse -c /var/www/module/phpstan.neo
 - `versions.php` adds what depends on the Magento version of the installation: before 2.4.8,
   `AbstractModel::_init()` and `load()` do not declare their `LocalizedException`, so a tag that 2.4.8 needs is not
   reported as too wide there; before 2.4.9, `Escaper::escapeHtml()` declares `string|array` as result also for a
-  string, `stubs/Escaper.stub` declares the types of 2.4.9
+  string, `stubs/Escaper.stub` declares the types of 2.4.9; with all versions, `stubs/AbstractItem.stub` declares the
+  parent item of quote items as nullable (Magento declares it as always set, items without parent return null)
 - tests may declare `@throws ReflectionException` for reflection on classes they name themselves (classes in a
   namespace `Test`), which PhpStorm requires and PHPStan knows cannot be thrown; attributes of newer PHPUnit versions
   (`DataProvider`, `AllowMockObjectsWithoutExpectations`) are not reported with older ones

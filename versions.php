@@ -13,6 +13,9 @@ declare(strict_types=1);
  * Before Magento 2.4.9 (magento/framework 103.0.9), Escaper::escapeHtml() declares string|array as result, also for a
  * string; stubs/Escaper.stub declares the types of 2.4.9.
  *
+ * With all versions, stubs/AbstractItem.stub declares the parent item of a quote item as nullable, Magento declares it
+ * as always set.
+ *
  * @author      Andreas Knollmann
  * @copyright   Copyright (c) 2014-2026 Softwareentwicklung Andreas Knollmann
  * @license     http://www.opensource.org/licenses/mit-license.php MIT
@@ -34,7 +37,7 @@ if ($frameworkVersion !== '' && version_compare($frameworkVersion, '103.0.8', '<
     ];
 }
 
-$stubFiles = [];
+$stubFiles = [__DIR__ . '/stubs/AbstractItem.stub'];
 
 if ($frameworkVersion !== '' && version_compare($frameworkVersion, '103.0.9', '<')) {
     $stubFiles[] = __DIR__ . '/stubs/Escaper.stub';

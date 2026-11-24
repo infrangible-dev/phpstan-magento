@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.5
+
+### Fixed
+
+- The parent item of quote items (`AbstractItem::getParentItem()`) is nullable (`stubs/AbstractItem.stub`); Magento
+  declares it as always set, so checks of items without parent were reported as always false.
+
 ## 1.2.4
 
 ### Added
