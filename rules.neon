@@ -34,8 +34,6 @@ rules:
     - Infrangible\PhpStan\OnlyImplementationInstanceofRule
     # checked exceptions declared only in the @throws tag of a parent method
     - Infrangible\PhpStan\OwnThrowsRule
-    # a cast of a value that already has the type of the cast
-    - Infrangible\PhpStan\RedundantCastRule
     # an assertion of a method call that repeats an earlier one without any use of the object in between
     - Infrangible\PhpStan\RepeatedAssertionRule
     # a suppression of unused parameters on a method that overrides a parent method or uses all parameters
@@ -49,6 +47,13 @@ rules:
     # a variable that is assigned once and then only passed by value to one closure
     - Infrangible\PhpStan\VariableOnlyUsedInClosureRule
 services:
+    # a cast of a value that already has the type of the cast; it reads the bodies of called methods with the parser
+    -
+        class: Infrangible\PhpStan\RedundantCastRule
+        arguments:
+            parser: @currentPhpVersionRichParser
+        tags:
+            - phpstan.rules.rule
     # the checked exceptions that the PHP stubs of PhpStorm declare, which PHPStan does not know
     -
         class: Infrangible\PhpStan\PhpStormThrowTypeExtension

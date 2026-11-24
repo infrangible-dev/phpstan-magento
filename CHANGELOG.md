@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.2
+
+### Fixed
+
+- `RedundantCastRule` did not report casts of calls of methods with a body whose return statements all return a value
+  of the type, for example `(float)` of `Magento\Catalog\Helper\Data::getTaxPrice()`, which PhpStorm reports as
+  redundant. It reads the method and checks parameters, literals, casts and calls with declared types; other values
+  still count as unknown.
+
 ## 1.2.1
 
 ### Added

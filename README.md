@@ -75,7 +75,8 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
   `@noinspection PhpRedundantCatchClauseInspection` on the method or the try)
 - `RedundantCastRule`: a cast of a value that already has the type of the cast ("Type cast is redundant"; types of
   docblocks count, as in PhpStorm, except for calls of methods with a body and without native return type, whose
-  returned types PhpStorm also reads, and except for PHP functions whose result can be false or null in the stubs of
+  returned types PhpStorm also reads: these are reported only if every return statement returns a known value of the
+  type (parameters, literals, casts, calls with declared types), and except for PHP functions whose result can be false or null in the stubs of
   PhpStorm, which PHPStan narrows; where PhpStorm still reports a needed cast, keep it with
   `@noinspection PhpCastIsUnnecessaryInspection`)
 - `OnlyImplementationInstanceofRule`: an `instanceof` check of a value whose declared type is an interface or abstract
