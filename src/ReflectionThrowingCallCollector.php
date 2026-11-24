@@ -143,7 +143,13 @@ readonly class ReflectionThrowingCallCollector implements Collector
         }
 
         foreach ($throwType->getObjectClassNames() as $className) {
-            if (is_a($className, ReflectionException::class, true)) {
+            if ($className === ReflectionException::class || ($this->reflectionProvider->hasClass($className) &&
+                    in_array(
+                        ReflectionException::class,
+                        $this->reflectionProvider->getClass($className)->getParentClassesNames(),
+                        true
+                    ))) {
+
                 return true;
             }
         }
