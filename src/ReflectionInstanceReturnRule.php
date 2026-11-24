@@ -61,7 +61,11 @@ class ReflectionInstanceReturnRule implements Rule
         $nodeFinder = new NodeFinder();
         $instanceVariables = [];
 
-        foreach ($nodeFinder->findInstanceOf($stmts, Expr\Assign::class) as $assign) {
+        foreach ($nodeFinder->find($stmts, fn(Node $found): bool => $found instanceof Expr\Assign) as $assign) {
+            if (! $assign instanceof Expr\Assign) {
+                continue;
+            }
+
             $variable = $assign->var;
 
             if ($variable instanceof Expr\Variable && is_string($variable->name) &&
@@ -73,8 +77,8 @@ class ReflectionInstanceReturnRule implements Rule
 
         $errors = [];
 
-        foreach ($nodeFinder->findInstanceOf($stmts, Stmt\Return_::class) as $return) {
-            $expression = $return->expr;
+        foreach ($nodeFinder->find($stmts, fn(Node $found): bool => $found instanceof Stmt\Return_) as $return) {
+            $expression = $return instanceof Stmt\Return_ ? $return->expr : null;
 
             if ($expression === null) {
                 continue;
