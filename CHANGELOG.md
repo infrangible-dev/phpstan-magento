@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.7
+
+### Added
+
+- `TemplateTestDoubleReturnRule`: a test double of PHPUnit (`createStub()`, `createMock()` and the like) returned by a
+  method whose return tag is one of its own template types, which PhpStorm reports as "Return type does not match the
+  declared".
+
 ## 1.2.6
 
 ### Fixed

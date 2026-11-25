@@ -42,6 +42,8 @@ rules:
     - Infrangible\PhpStan\RedundantUnusedParameterSuppressionRule
     # an inline @var tag of an assignment with the type that the assigned value already has
     - Infrangible\PhpStan\RedundantVarTagRule
+    # a test double of PHPUnit returned as a template type of the method
+    - Infrangible\PhpStan\TemplateTestDoubleReturnRule
     # a test double of PHPUnit created inside a closure
     - Infrangible\PhpStan\TestDoubleInClosureRule
     # a parameter that the method does not use, unless the method overrides another one or suppresses it

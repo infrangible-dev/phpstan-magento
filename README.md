@@ -122,6 +122,8 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `ReflectionInstanceReturnRule`: an instance created by `ReflectionClass::newInstance()`, `newInstanceArgs()` or
   `newInstanceWithoutConstructor()`, returned by a function with a class as native return type ("Return value is
   expected to be 'X', 'object|string' returned"; declare `object` and the class in the return tag)
+- `TemplateTestDoubleReturnRule`: a test double of PHPUnit returned by a method whose return tag is one of its own
+  template types ("Return type does not match the declared"; create the test doubles where they are used)
 - `MissingReturnTypeRule`: a method without native return type, also in interfaces and traits ("Missing function's
   return type declaration"; not for constructors, destructors, `__clone()` and methods that return a resource).
 

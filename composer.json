@@ -2,7 +2,7 @@
     "name": "infrangible/phpstan-magento",
     "description": "PHPStan rules and configuration for Magento 2 modules: the checks of PhpStorm that PHPStan does not do itself, and the classes that Magento generates",
     "type": "phpstan-extension",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "license": "MIT",
     "keywords": [
         "Magento",
