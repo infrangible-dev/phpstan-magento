@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.6
+
+### Fixed
+
+- `hasSpecialPrice()` of the price box of configurable products declares `Exception` with all Magento versions
+  (`stubs/ConfigurableFinalPriceBox.stub`); Magento declares it since 2.4.8, so the tag that modules need there was
+  reported as not thrown with 2.4.6 and 2.4.7.
+
 ## 1.2.5
 
 ### Fixed

@@ -14,7 +14,8 @@ declare(strict_types=1);
  * string; stubs/Escaper.stub declares the types of 2.4.9.
  *
  * With all versions, stubs/AbstractItem.stub declares the parent item of a quote item as nullable, Magento declares it
- * as always set.
+ * as always set, and stubs/ConfigurableFinalPriceBox.stub declares the Exception that hasSpecialPrice() of configurable
+ * price boxes throws since Magento 2.4.8.
  *
  * @author      Andreas Knollmann
  * @copyright   Copyright (c) 2014-2026 Softwareentwicklung Andreas Knollmann
@@ -37,7 +38,7 @@ if ($frameworkVersion !== '' && version_compare($frameworkVersion, '103.0.8', '<
     ];
 }
 
-$stubFiles = [__DIR__ . '/stubs/AbstractItem.stub'];
+$stubFiles = [__DIR__ . '/stubs/AbstractItem.stub', __DIR__ . '/stubs/ConfigurableFinalPriceBox.stub'];
 
 if ($frameworkVersion !== '' && version_compare($frameworkVersion, '103.0.9', '<')) {
     $stubFiles[] = __DIR__ . '/stubs/Escaper.stub';
