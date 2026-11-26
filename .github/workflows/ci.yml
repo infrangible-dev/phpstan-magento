@@ -19,8 +19,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Magento 2.4.6 to 2.4.9 come with PHPStan 1 (PHP 8.2 to 8.5)
-          - {php: "8.2", phpstan: "~1.12.0"}
+          # Magento 2.4.6 to 2.4.9 come with PHPStan 1 (PHP 8.1 to 8.5)
+          - {php: "8.1", phpstan: "~1.12.0"}
           - {php: "8.5", phpstan: "~1.12.0"}
           - {php: "8.5", phpstan: "~2.3.0", conventions: true}
     steps:
@@ -57,10 +57,10 @@ jobs:
         # findings PhpStorm reports that PHPStan does not check, also in bootstrap.php and versions.php
         run: workflows/tools/check-code-conventions.sh package
 
-      - name: PHP 8.2 syntax
+      - name: PHP 8.1 syntax
         if: matrix.conventions
         run: |
-          # Rector reports code that the syntax of PHP 8.2 writes shorter, with the dependencies of the package
+          # Rector reports code that the syntax of PHP 8.1 writes shorter, with the dependencies of the package
           mkdir -p "${RUNNER_TEMP}/rector"
           composer require --no-interaction --no-progress --working-dir "${RUNNER_TEMP}/rector" "rector/rector:~2.8.0"
           workflows/tools/check-php-syntax.sh package package "${RUNNER_TEMP}/rector/vendor/bin/rector"

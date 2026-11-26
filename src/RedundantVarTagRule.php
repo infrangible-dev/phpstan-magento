@@ -31,11 +31,11 @@ use PHPStan\Type\VerbosityLevel;
  *
  * @implements Rule<Stmt\Expression>
  */
-readonly class RedundantVarTagRule implements Rule
+class RedundantVarTagRule implements Rule
 {
     public function __construct(
-        private FileTypeMapper $fileTypeMapper,
-        private ReflectionProvider $reflectionProvider
+        private readonly FileTypeMapper $fileTypeMapper,
+        private readonly ReflectionProvider $reflectionProvider
     ) {
     }
 

@@ -9,7 +9,7 @@ let PHPStan analyse the classes that Magento generates.
 - `rules.neon`: the rules for the conventions of PhpStorm and the `@throws` tags as PhpStorm expects them, also usable
   without Magento
 
-Supports Magento 2.4.6 to 2.4.9 (PHPStan 1.12, which Magento comes with) and PHPStan 2, with PHP 8.2 or newer.
+Supports Magento 2.4.6 to 2.4.9 (PHPStan 1.12, which Magento comes with) and PHPStan 2, with PHP 8.1 or newer.
 
 ## Usage
 
@@ -148,7 +148,7 @@ instead of using node classes that php-parser 5 deprecates. The checks of every 
   `versions.php`), which PHPStan does not analyse without a Magento installation: documented parameters, imports,
   readonly classes, no inline `@var` tags, no undefined variables and no calls with checked exceptions that PhpStorm
   would report
-- Rector (syntax of PHP 8.2) and PHPCPD (duplicated code)
+- Rector (syntax of PHP 8.1) and PHPCPD (duplicated code)
 
 ```bash
 composer install

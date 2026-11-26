@@ -33,9 +33,9 @@ use PHPStan\Type\VerbosityLevel;
  *
  * @implements Rule<Expr>
  */
-readonly class NarrowedPropertyAccessRule implements Rule
+class NarrowedPropertyAccessRule implements Rule
 {
-    public function __construct(private ReflectionProvider $reflectionProvider)
+    public function __construct(private readonly ReflectionProvider $reflectionProvider)
     {
     }
 

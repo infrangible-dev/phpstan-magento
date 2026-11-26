@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.8
+
+### Changed
+
+- Supports PHP 8.1 again, like Magento 2.4.6: the rules declare their properties `readonly` instead of being
+  `readonly` classes (PHP 8.2). The Adobe Commerce Marketplace rejects modules that allow fewer PHP versions than the
+  Magento versions they support.
+
 ## 1.2.7
 
 ### Added

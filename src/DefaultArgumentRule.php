@@ -28,7 +28,7 @@ use PHPStan\Rules\RuleErrorBuilder;
  *
  * @implements Rule<Expr\CallLike>
  */
-readonly class DefaultArgumentRule implements Rule
+class DefaultArgumentRule implements Rule
 {
     /**
      * Node types of number literals: LNumber and DNumber of php-parser 4 (PHPStan 1), Int_ and Float_ of php-parser 5
@@ -36,7 +36,7 @@ readonly class DefaultArgumentRule implements Rule
      */
     private const NUMBERS = ['Scalar_LNumber', 'Scalar_DNumber', 'Scalar_Int', 'Scalar_Float'];
 
-    public function __construct(private ReflectionProvider $reflectionProvider)
+    public function __construct(private readonly ReflectionProvider $reflectionProvider)
     {
     }
 

@@ -24,9 +24,9 @@ use ReflectionException;
  * throwing. Calls in closures do not count for the method. For UnthrownReflectionExceptionRule.
  * @implements Collector<Expr, string>
  */
-readonly class ReflectionThrowingCallCollector implements Collector
+class ReflectionThrowingCallCollector implements Collector
 {
-    public function __construct(private ReflectionProvider $reflectionProvider)
+    public function __construct(private readonly ReflectionProvider $reflectionProvider)
     {
     }
 
