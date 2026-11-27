@@ -100,6 +100,10 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `TestDoubleInClosureRule`: a test double of PHPUnit created inside a closure (PhpStorm does not resolve the type of
   `createStub()` of a generated factory there and reports "Expected parameter of type 'XFactory', 'object&Stub|Stub'
   provided"; create it outside, for example in a helper method)
+- `GeneratedExtensionTestDoubleRule`: a method of a test double of a generated extension attributes interface (like
+  `ProductOptionExtensionInterface`) configured with `method()`. The unit test bootstrap generates these interfaces
+  without the extension attributes of the configuration, so the test passes in an installation and fails in CI ("Trying
+  to configure method ... which cannot be configured because it does not exist"); use a plain object with the methods
 - `SpreadArrayLiteralArgumentRule`: an unpacked array literal as argument that itself unpacks an array, like
   `new X(...[...$services, $other])` (PhpStorm counts every element of the literal as one argument and reports
   "Required parameters '$a, $b' missing"; pass the arguments explicitly)

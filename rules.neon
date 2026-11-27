@@ -28,6 +28,9 @@ rules:
     - Infrangible\PhpStan\OverwrittenAssignmentRule
     # a constructor that does not call the constructor of its parent class
     - Infrangible\PhpStan\MissingParentConstructorCallRule
+    # a configured method of a test double of a generated extension attributes interface, which the unit test bootstrap
+    # generates without the methods
+    - Infrangible\PhpStan\GeneratedExtensionTestDoubleRule
     # a member of the value of a property that only exists after an instanceof check of the property
     - Infrangible\PhpStan\NarrowedPropertyAccessRule
     # a catch of a checked exception that no call of the try block declares

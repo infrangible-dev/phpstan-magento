@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.11
+
+### Added
+
+- `GeneratedExtensionTestDoubleRule`: a method of a test double of a generated extension attributes interface, like
+  `ProductOptionExtensionInterface`, configured with `method()`. The unit test bootstrap of Magento generates these
+  interfaces without the extension attributes of the configuration, so such tests pass in an installation and fail in
+  CI.
+
 ## 1.2.10
 
 ### Added
