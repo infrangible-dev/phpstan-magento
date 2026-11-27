@@ -18,6 +18,7 @@ use PHPStan\Node\InClassNode;
 use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * A test class that creates mock objects of PHPUnit (createMock(), getMock() of the mock builder and the like) without
@@ -29,8 +30,9 @@ use PHPStan\Rules\RuleErrorBuilder;
  */
 class MockObjectWithoutExpectationsRule implements Rule
 {
-    private const TEST_CASE = 'PHPUnit\Framework\TestCase';
+    private const TEST_CASE = TestCase::class;
 
+    // a text: the attribute only exists in newer versions of PHPUnit
     private const ATTRIBUTE = 'PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations';
 
     /** The methods that create mock objects, in lowercase. */
