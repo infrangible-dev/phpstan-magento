@@ -61,6 +61,8 @@ rules:
     # a parameter that the method does not use, unless the method overrides another one, is overridden by a subclass or
     # suppresses it (collected by the collectors below)
     - Infrangible\PhpStan\UnusedParameterRule
+    # a parameter of a private method that all calls of the method pass the same constant value
+    - Infrangible\PhpStan\SameParameterValueRule
     # a variable that is assigned once and then only passed by value to one closure
     - Infrangible\PhpStan\VariableOnlyUsedInClosureRule
 services:

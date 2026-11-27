@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.14
+
+### Added
+
+- `SameParameterValueRule`: a parameter of a private method that all calls of the method pass the same constant value,
+  like `createResource([7])` in every call. PhpStorm reports "Parameter's value is always '[7]'"; the value belongs
+  into the method. Methods that are also used as callables or named in strings are skipped.
+
 ## 1.2.13
 
 ### Added

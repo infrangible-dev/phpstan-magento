@@ -106,6 +106,9 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `MagicMethodCallRule`: a method of a `DataObject` that only its magic `__call()` handles, also one declared by a
   `@method` tag, like `Product::getUrlKey()` (Magento derives the key from the method name and returns null for unknown
   keys without a warning; use `getData()` and `setData()` with the column name)
+- `SameParameterValueRule`: a parameter of a private method that all calls of the method pass the same constant value,
+  like `createResource([7])` ("Parameter's value is always '[7]'"; use the value in the method). Methods that are also
+  used as callables or named in strings are skipped
 - `MockObjectWithoutExpectationsRule`: a test class that creates mock objects of PHPUnit without configuring any
   expectation (`expects()` or `with()`) and without the attribute `#[AllowMockObjectsWithoutExpectations]`. PHPUnit 12,
   used in CI with PHP 8.5, reports a notice for every such test, older versions do not; use `createStub()` or add the
