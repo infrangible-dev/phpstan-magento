@@ -15,10 +15,10 @@ use PhpParser\Node\Expr;
 use PhpParser\NodeFinder;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\InClassNode;
+use PHPStan\Reflection\ClassReflection;
 use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPUnit\Framework\TestCase;
 
 /**
  * A test class that creates mock objects of PHPUnit (createMock(), getMock() of the mock builder and the like) without
@@ -30,7 +30,8 @@ use PHPUnit\Framework\TestCase;
  */
 class MockObjectWithoutExpectationsRule implements Rule
 {
-    private const TEST_CASE = TestCase::class;
+    // in lowercase: PHPUnit is not installed with the rules, and Rector turns existing class names into ::class
+    private const TEST_CASE = 'phpunit\framework\testcase';
 
     // a text: the attribute only exists in newer versions of PHPUnit
     private const ATTRIBUTE = 'PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations';
@@ -63,7 +64,9 @@ class MockObjectWithoutExpectationsRule implements Rule
     {
         $class = $node->getClassReflection();
 
-        if (! $class->isSubclassOf(self::TEST_CASE) || $this->hasAttribute($node)) {
+        $parentNames = array_map(static fn(ClassReflection $parent): string => strtolower($parent->getName()), $class->getParents());
+
+        if (! in_array(self::TEST_CASE, $parentNames, true) || $this->hasAttribute($node)) {
             return [];
         }
 
