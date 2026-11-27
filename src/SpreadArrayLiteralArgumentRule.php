@@ -59,9 +59,9 @@ class SpreadArrayLiteralArgumentRule implements Rule
             // list elements), and the class of the items differs between php-parser 4 and 5
             $items = $value->items;
             $unpackedItem = (new NodeFinder())->findFirst(
-                $items,
-                static fn(Node $node): bool => in_array($node, $items, true) && property_exists($node, 'unpack') &&
-                    $node->unpack === true
+                $value,
+                static fn(Node $node): bool => property_exists($node, 'unpack') && $node->unpack === true &&
+                    in_array($node, $items, true)
             );
 
             if ($unpackedItem !== null) {
