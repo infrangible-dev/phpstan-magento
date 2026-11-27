@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.10
+
+### Added
+
+- `SpreadArrayLiteralArgumentRule`: an unpacked array literal as argument that itself unpacks an array, like
+  `new X(...[...$services, $other])`. PHPStan counts the arguments from the shape of the inner array, PhpStorm counts
+  every element of the literal as one argument and reports "Required parameters '$a, $b' missing".
+
 ## 1.2.9
 
 ### Fixed

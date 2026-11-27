@@ -45,6 +45,8 @@ rules:
     - Infrangible\PhpStan\RedundantVarTagRule
     # a test double of PHPUnit returned as a template type of the method
     - Infrangible\PhpStan\TemplateTestDoubleReturnRule
+    # an unpacked array literal as argument that itself unpacks an array, PhpStorm counts its elements as arguments
+    - Infrangible\PhpStan\SpreadArrayLiteralArgumentRule
     # a test double of PHPUnit created inside a closure
     - Infrangible\PhpStan\TestDoubleInClosureRule
     # a parameter that the method does not use, unless the method overrides another one, is overridden by a subclass or

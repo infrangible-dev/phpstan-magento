@@ -100,6 +100,9 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `TestDoubleInClosureRule`: a test double of PHPUnit created inside a closure (PhpStorm does not resolve the type of
   `createStub()` of a generated factory there and reports "Expected parameter of type 'XFactory', 'object&Stub|Stub'
   provided"; create it outside, for example in a helper method)
+- `SpreadArrayLiteralArgumentRule`: an unpacked array literal as argument that itself unpacks an array, like
+  `new X(...[...$services, $other])` (PhpStorm counts every element of the literal as one argument and reports
+  "Required parameters '$a, $b' missing"; pass the arguments explicitly)
 - `VariableOnlyUsedInClosureRule`: a variable that is assigned once and then only passed by value to one closure with
   `use` ("Variable is only used inside closure"; assign it in the closure)
 - `UnusedParameterRule`: a parameter that the method does not use ("Unused parameter"; not for methods that override
