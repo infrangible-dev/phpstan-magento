@@ -38,7 +38,8 @@ rules:
     - Infrangible\PhpStan\OwnThrowsRule
     # an assertion of a method call that repeats an earlier one without any use of the object in between
     - Infrangible\PhpStan\RepeatedAssertionRule
-    # a suppression of unused parameters on a method that overrides a parent method or uses all parameters
+    # a suppression of unused parameters on a method that overrides a parent method, is overridden by a subclass or uses
+    # all parameters (collected by the collectors below)
     - Infrangible\PhpStan\RedundantUnusedParameterSuppressionRule
     # an inline @var tag of an assignment with the type that the assigned value already has
     - Infrangible\PhpStan\RedundantVarTagRule
@@ -46,11 +47,26 @@ rules:
     - Infrangible\PhpStan\TemplateTestDoubleReturnRule
     # a test double of PHPUnit created inside a closure
     - Infrangible\PhpStan\TestDoubleInClosureRule
-    # a parameter that the method does not use, unless the method overrides another one or suppresses it
+    # a parameter that the method does not use, unless the method overrides another one, is overridden by a subclass or
+    # suppresses it (collected by the collectors below)
     - Infrangible\PhpStan\UnusedParameterRule
     # a variable that is assigned once and then only passed by value to one closure
     - Infrangible\PhpStan\VariableOnlyUsedInClosureRule
 services:
+    # the methods of parent classes that methods override, the unused parameters and the suppressions of unused
+    # parameters, for UnusedParameterRule and RedundantUnusedParameterSuppressionRule
+    -
+        class: Infrangible\PhpStan\OverriddenMethodCollector
+        tags:
+            - phpstan.collector
+    -
+        class: Infrangible\PhpStan\UnusedParameterCollector
+        tags:
+            - phpstan.collector
+    -
+        class: Infrangible\PhpStan\RedundantUnusedParameterSuppressionCollector
+        tags:
+            - phpstan.collector
     # throws tags with ReflectionException on test methods that call nothing which declares it, like PhpStorm judges
     -
         class: Infrangible\PhpStan\ReflectionThrowsTagCollector

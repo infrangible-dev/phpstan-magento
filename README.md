@@ -89,8 +89,8 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `LoopToArrayMapRule`: a foreach loop directly after `$x = [];` that only assigns one value per element to `$x[]` or
   `$x[$key]` ("Loop can be converted to an 'array_map()' call")
 - `RedundantUnusedParameterSuppressionRule`: `@noinspection PhpUnusedParameterInspection` on a method that overrides
-  or implements a method of a parent class or an interface, or that uses all its parameters ("Redundant suppression";
-  PhpStorm reports no unused parameters of such methods)
+  or implements a method of a parent class or an interface, that a subclass in the analysed code overrides, or that
+  uses all its parameters ("Redundant suppression"; PhpStorm reports no unused parameters of such methods)
 - `NarrowedPropertyAccessRule`: a property or method of the value of a property that only exists after an
   `instanceof` check of the property ("Potentially polymorphic call"; PhpStorm only narrows variables and properties
   of `$this`, assign the property to a variable first)
@@ -103,8 +103,9 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `VariableOnlyUsedInClosureRule`: a variable that is assigned once and then only passed by value to one closure with
   `use` ("Variable is only used inside closure"; assign it in the closure)
 - `UnusedParameterRule`: a parameter that the method does not use ("Unused parameter"; not for methods that override
-  another one, methods without statements, which are hooks, and promoted constructor parameters; methods with a given
-  signature, like the methods of plugins, suppress it with `@noinspection PhpUnusedParameterInspection`)
+  another one or that a subclass in the analysed code overrides, methods without statements, which are hooks, and
+  promoted constructor parameters; methods with a given signature, like the methods of plugins, suppress it with
+  `@noinspection PhpUnusedParameterInspection`)
 - `MissingParentConstructorCallRule`: a constructor that does not call the constructor of its parent class ("Missing
   parent constructor call"; skipping it on purpose needs `@noinspection PhpMissingParentConstructorInspection` with a
   reason)

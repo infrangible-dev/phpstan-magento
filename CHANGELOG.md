@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.9
+
+### Fixed
+
+- `UnusedParameterRule` and `RedundantUnusedParameterSuppressionRule`: methods that a subclass in the analysed code
+  overrides have a given signature, like PhpStorm judges them. Their unused parameters are no longer reported, and
+  `@noinspection PhpUnusedParameterInspection` on them is reported as redundant ("Redundant suppression" in
+  PhpStorm). Both rules evaluate the data of the new collectors `OverriddenMethodCollector`,
+  `UnusedParameterCollector` and `RedundantUnusedParameterSuppressionCollector`.
+
 ## 1.2.8
 
 ### Changed
