@@ -8,6 +8,10 @@
   given by a variable, like `$this->getMockBuilder($className)->getMock()->setTemplate('x')`. PHPStan takes the class
   from the `class-string` type of the variable, PhpStorm only knows the test double interface and reports "Method
   'setTemplate' not found in MockObject". `method()` and `expects()` of the test double interfaces stay allowed.
+- `MagicMethodCallRule`: a method of a `DataObject` that only its magic `__call()` handles, also if a `@method` tag
+  declares it, like `Product::getUrlKey()`. Magento derives the key of the data from the method name, which changed
+  between versions, and returns null for unknown keys without a warning; use `getData()` and `setData()` with the
+  column name.
 
 ## 1.2.12
 

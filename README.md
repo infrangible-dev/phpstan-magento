@@ -103,6 +103,9 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `VariableClassTestDoubleCallRule`: a method of the tested class called on a test double of PHPUnit whose class is
   given by a variable, like `getMockBuilder($className)` (PhpStorm only knows the test double interface and reports
   "Method 'x' not found in MockObject"; create the test double with a literal class)
+- `MagicMethodCallRule`: a method of a `DataObject` that only its magic `__call()` handles, also one declared by a
+  `@method` tag, like `Product::getUrlKey()` (Magento derives the key from the method name and returns null for unknown
+  keys without a warning; use `getData()` and `setData()` with the column name)
 - `MockObjectWithoutExpectationsRule`: a test class that creates mock objects of PHPUnit without configuring any
   expectation (`expects()` or `with()`) and without the attribute `#[AllowMockObjectsWithoutExpectations]`. PHPUnit 12,
   used in CI with PHP 8.5, reports a notice for every such test, older versions do not; use `createStub()` or add the
