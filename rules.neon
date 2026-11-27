@@ -35,6 +35,8 @@ rules:
     - Infrangible\PhpStan\NarrowedPropertyAccessRule
     # a catch of a checked exception that no call of the try block declares
     - Infrangible\PhpStan\NeverThrownCatchRule
+    # a test class with mock objects of PHPUnit but no expectation and without AllowMockObjectsWithoutExpectations
+    - Infrangible\PhpStan\MockObjectWithoutExpectationsRule
     # an instanceof check against the only class of the module that implements the declared interface
     - Infrangible\PhpStan\OnlyImplementationInstanceofRule
     # checked exceptions declared only in the @throws tag of a parent method

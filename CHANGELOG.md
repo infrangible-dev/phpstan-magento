@@ -8,6 +8,9 @@
   `ProductOptionExtensionInterface`, configured with `method()`. The unit test bootstrap of Magento generates these
   interfaces without the extension attributes of the configuration, so such tests pass in an installation and fail in
   CI.
+- `MockObjectWithoutExpectationsRule`: a test class that creates mock objects of PHPUnit without configuring any
+  expectation and without the attribute `AllowMockObjectsWithoutExpectations`. PHPUnit 12 reports a notice for every
+  such test, so the tests pass with older versions and fail in CI with PHP 8.5.
 
 ## 1.2.10
 

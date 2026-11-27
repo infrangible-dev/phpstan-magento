@@ -51,7 +51,9 @@ class GeneratedExtensionTestDoubleRule implements Rule
      */
     public function processNode(Node $node, Scope $scope): array
     {
-        if (! $node->name instanceof Node\Identifier || $node->name->toLowerString() !== 'method') {
+        $name = $node->name;
+
+        if (! $name instanceof Node\Identifier || $name->toLowerString() !== 'method') {
             return [];
         }
 
@@ -62,8 +64,9 @@ class GeneratedExtensionTestDoubleRule implements Rule
 
             $class = $this->reflectionProvider->getClass($className);
 
-            if ($class->isInterface() && $class->getName() !== self::EXTENSION_ATTRIBUTES_INTERFACE &&
-                $class->implementsInterface(self::EXTENSION_ATTRIBUTES_INTERFACE)) {
+            // the interfaces of an interface are its parents, so ExtensionAttributesInterface itself does not match
+            if ($class->isInterface() &&
+                array_key_exists(self::EXTENSION_ATTRIBUTES_INTERFACE, $class->getInterfaces())) {
 
                 return [
                     RuleErrorBuilder::message(
