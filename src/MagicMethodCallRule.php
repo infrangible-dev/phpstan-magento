@@ -60,7 +60,11 @@ class MagicMethodCallRule implements Rule
         $nativeClass = $declaringClass->getNativeReflection();
 
         if ($nativeClass->hasMethod($methodName) || ! $nativeClass->hasMethod('__call') ||
-            ($declaringClass->getName() !== self::DATA_OBJECT && ! $declaringClass->isSubclassOf(self::DATA_OBJECT))) {
+            ! in_array(
+                self::DATA_OBJECT,
+                [$declaringClass->getName(), ...$declaringClass->getParentClassesNames()],
+                true
+            )) {
             return [];
         }
 

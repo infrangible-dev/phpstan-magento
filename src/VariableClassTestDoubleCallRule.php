@@ -66,11 +66,13 @@ class VariableClassTestDoubleCallRule implements Rule
         $doubleVariables = [];
 
         foreach ($nodeFinder->find($stmts, fn(Node $found): bool => $found instanceof Expr\Assign) as $assign) {
-            $variableName = $assign instanceof Expr\Assign ? $this->variableName($assign->var) : null;
+            if (! $assign instanceof Expr\Assign) {
+                continue;
+            }
 
-            if ($variableName !== null && $assign instanceof Expr\Assign &&
-                $this->createsVariableClassTestDouble($assign->expr)) {
+            $variableName = $this->variableName($assign->var);
 
+            if ($variableName !== null && $this->createsVariableClassTestDouble($assign->expr)) {
                 $doubleVariables[ $variableName ] = true;
             }
         }
