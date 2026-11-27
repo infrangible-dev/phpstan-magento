@@ -54,8 +54,10 @@ class SpreadArrayLiteralArgumentRule implements Rule
                 continue;
             }
 
-            // php-parser 4 has null items for skipped list elements
-            foreach (array_filter($value->items) as $item) {
+            // php-parser 4 has null items for skipped list elements, php-parser 5 has none
+            $items = array_filter($value->items, static fn(mixed $item): bool => $item !== null);
+
+            foreach ($items as $item) {
                 if ($item->unpack) {
                     $errors[] = RuleErrorBuilder::message(
                         'An unpacked array literal with an unpacked array as argument: PhpStorm counts every ' .
