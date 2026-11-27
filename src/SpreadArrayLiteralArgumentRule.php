@@ -12,6 +12,7 @@ namespace Infrangible\PhpStan;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr;
+use PhpParser\NodeFinder;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
@@ -54,19 +55,21 @@ class SpreadArrayLiteralArgumentRule implements Rule
                 continue;
             }
 
-            // php-parser 4 has null items for skipped list elements, php-parser 5 has none
-            $items = array_filter($value->items, static fn(mixed $item): bool => $item !== null);
+            // the items of the literal that unpack an array; NodeFinder skips the null items of php-parser 4 (skipped
+            // list elements), and the class of the items differs between php-parser 4 and 5
+            $items = $value->items;
+            $unpackedItem = (new NodeFinder())->findFirst(
+                $items,
+                static fn(Node $node): bool => in_array($node, $items, true) && property_exists($node, 'unpack') &&
+                    $node->unpack === true
+            );
 
-            foreach ($items as $item) {
-                if ($item->unpack) {
-                    $errors[] = RuleErrorBuilder::message(
-                        'An unpacked array literal with an unpacked array as argument: PhpStorm counts every ' .
-                        'element of the literal as one argument and reports required parameters as missing. Pass the ' .
-                        'arguments explicitly.'
-                    )->line($arg->getStartLine())->identifier('infrangible.spreadArrayLiteralArgument')->build();
-
-                    break;
-                }
+            if ($unpackedItem !== null) {
+                $errors[] = RuleErrorBuilder::message(
+                    'An unpacked array literal with an unpacked array as argument: PhpStorm counts every element of ' .
+                    'the literal as one argument and reports required parameters as missing. Pass the arguments ' .
+                    'explicitly.'
+                )->line($arg->getStartLine())->identifier('infrangible.spreadArrayLiteralArgument')->build();
             }
         }
 
