@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.12
+
+### Changed
+
+- `RedundantCastRule`: `min()` and `max()` returned by a called method have the types of their arguments, like
+  PhpStorm types them, so a cast of `Catalog\Model\Product\Type\Price::getBasePrice()` to float is reported ("Type
+  cast is redundant").
+
 ## 1.2.11
 
 ### Added

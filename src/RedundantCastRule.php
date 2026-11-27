@@ -31,6 +31,7 @@ use PHPStan\Type\IntegerType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
+use PHPStan\Type\TypeCombinator;
 use PHPStan\Type\VerbosityLevel;
 
 /**
@@ -224,7 +225,8 @@ class RedundantCastRule implements Rule
     /**
      * Checks if every return statement of the method returns a value with the type of the cast, like PhpStorm, which
      * also uses the types the body returns. Known are parameters, literals, casts and calls of functions, of methods
-     * of the class and of methods of its properties; any other value counts as unknown.
+     * of the class and of methods of its properties, and min() or max() of known values; any other value counts as
+     * unknown.
      *
      * @param Cast $node
      * @param ExtendedMethodReflection $method
@@ -369,6 +371,10 @@ class RedundantCastRule implements Rule
             return new BooleanType();
         }
 
+        if ($expression instanceof Expr\FuncCall && $this->isMinOrMax($expression)) {
+            return $this->resolveMinOrMaxType($expression, $class, $parameterTypes, $scope);
+        }
+
         if ($expression instanceof Expr\FuncCall) {
             $functionName = $expression->name;
 
@@ -379,6 +385,64 @@ class RedundantCastRule implements Rule
 
         return $expression instanceof Expr\MethodCall ? $this->resolveMethodCallType($expression, $class, $scope) :
             null;
+    }
+
+    /**
+     * Checks if the expression calls min() or max() with single arguments, whose result PhpStorm types by them.
+     *
+     * @param Expr\FuncCall $call
+     *
+     * @return bool
+     */
+    private function isMinOrMax(Expr\FuncCall $call): bool
+    {
+        $functionName = $call->name;
+
+        if (! $functionName instanceof Node\Name ||
+            ! in_array($functionName->toLowerString(), ['min', 'max'], true) || $call->isFirstClassCallable()) {
+
+            return false;
+        }
+
+        foreach ($call->getArgs() as $arg) {
+            if ($arg->unpack) {
+                return false;
+            }
+        }
+
+        return count($call->getArgs()) > 1;
+    }
+
+    /**
+     * Returns the type of a call of min() or max(): the union of the types of its arguments, null if one is not known.
+     * PhpStorm types min(float, float) as float, for example in Catalog\Model\Product\Type\Price::getBasePrice().
+     *
+     * @param Expr\FuncCall $call
+     * @param ClassReflection $class
+     * @param array<string, Type> $parameterTypes
+     * @param Scope $scope
+     *
+     * @return Type|null
+     */
+    private function resolveMinOrMaxType(
+        Expr\FuncCall $call,
+        ClassReflection $class,
+        array $parameterTypes,
+        Scope $scope
+    ): ?Type {
+        $types = [];
+
+        foreach ($call->getArgs() as $arg) {
+            $type = $this->resolveType($arg->value, $class, $parameterTypes, $scope);
+
+            if ($type === null) {
+                return null;
+            }
+
+            $types[] = $type;
+        }
+
+        return TypeCombinator::union(...$types);
     }
 
     /**
