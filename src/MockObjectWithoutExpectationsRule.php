@@ -64,7 +64,10 @@ class MockObjectWithoutExpectationsRule implements Rule
     {
         $class = $node->getClassReflection();
 
-        $parentNames = array_map(static fn(ClassReflection $parent): string => strtolower($parent->getName()), $class->getParents());
+        $parentNames = array_map(
+            static fn(ClassReflection $parent): string => strtolower($parent->getName()),
+            $class->getParents()
+        );
 
         if (! in_array(self::TEST_CASE, $parentNames, true) || $this->hasAttribute($node)) {
             return [];
