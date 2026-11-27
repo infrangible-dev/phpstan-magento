@@ -100,6 +100,9 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `TestDoubleInClosureRule`: a test double of PHPUnit created inside a closure (PhpStorm does not resolve the type of
   `createStub()` of a generated factory there and reports "Expected parameter of type 'XFactory', 'object&Stub|Stub'
   provided"; create it outside, for example in a helper method)
+- `VariableClassTestDoubleCallRule`: a method of the tested class called on a test double of PHPUnit whose class is
+  given by a variable, like `getMockBuilder($className)` (PhpStorm only knows the test double interface and reports
+  "Method 'x' not found in MockObject"; create the test double with a literal class)
 - `MockObjectWithoutExpectationsRule`: a test class that creates mock objects of PHPUnit without configuring any
   expectation (`expects()` or `with()`) and without the attribute `#[AllowMockObjectsWithoutExpectations]`. PHPUnit 12,
   used in CI with PHP 8.5, reports a notice for every such test, older versions do not; use `createStub()` or add the

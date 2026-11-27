@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.13
+
+### Added
+
+- `VariableClassTestDoubleCallRule`: a method of the tested class called on a test double of PHPUnit whose class is
+  given by a variable, like `$this->getMockBuilder($className)->getMock()->setTemplate('x')`. PHPStan takes the class
+  from the `class-string` type of the variable, PhpStorm only knows the test double interface and reports "Method
+  'setTemplate' not found in MockObject". `method()` and `expects()` of the test double interfaces stay allowed.
+
 ## 1.2.12
 
 ### Changed

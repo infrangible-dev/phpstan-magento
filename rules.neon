@@ -26,6 +26,8 @@ rules:
     - Infrangible\PhpStan\ReflectionInstanceReturnRule
     # an assignment to a variable whose value is overwritten before it is read
     - Infrangible\PhpStan\OverwrittenAssignmentRule
+    # a call of a magic method of __call(), also one declared by a @method tag, instead of getData() or setData()
+    - Infrangible\PhpStan\MagicMethodCallRule
     # a constructor that does not call the constructor of its parent class
     - Infrangible\PhpStan\MissingParentConstructorCallRule
     # a configured method of a test double of a generated extension attributes interface, which the unit test bootstrap
@@ -54,6 +56,8 @@ rules:
     - Infrangible\PhpStan\SpreadArrayLiteralArgumentRule
     # a test double of PHPUnit created inside a closure
     - Infrangible\PhpStan\TestDoubleInClosureRule
+    # a method of the tested class called on a test double of PHPUnit whose class is given by a variable
+    - Infrangible\PhpStan\VariableClassTestDoubleCallRule
     # a parameter that the method does not use, unless the method overrides another one, is overridden by a subclass or
     # suppresses it (collected by the collectors below)
     - Infrangible\PhpStan\UnusedParameterRule
