@@ -61,6 +61,8 @@ rules:
     # a parameter that the method does not use, unless the method overrides another one, is overridden by a subclass or
     # suppresses it (collected by the collectors below)
     - Infrangible\PhpStan\UnusedParameterRule
+    # an instanceof check against a parameter that its @param tag declares as class-string, which PhpStorm misreads
+    - Infrangible\PhpStan\ClassStringInstanceofRule
     # a parameter of a private method that all calls of the method pass the same constant value
     - Infrangible\PhpStan\SameParameterValueRule
     # a variable that is assigned once and then only passed by value to one closure

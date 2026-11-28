@@ -106,6 +106,10 @@ Each rule reports what a PhpStorm inspection reports, with the message of PhpSto
 - `MagicMethodCallRule`: a method of a `DataObject` that only its magic `__call()` handles, also one declared by a
   `@method` tag, like `Product::getUrlKey()` (Magento derives the key from the method name and returns null for unknown
   keys without a warning; use `getData()` and `setData()` with the column name)
+- `ClassStringInstanceofRule`: an `instanceof` check against a parameter whose `@param` tag declares it as
+  `class-string`, like `@param class-string<T> $className` with `$instance instanceof $className` (PhpStorm then types
+  the checked value as class-string and reports "Return value is expected to be 'object', '\class-string' returned";
+  declare `@param string $className` and `@phpstan-param class-string<T> $className`)
 - `SameParameterValueRule`: a parameter of a private method that all calls of the method pass the same constant value,
   like `createResource([7])` ("Parameter's value is always '[7]'"; use the value in the method). Methods that are also
   used as callables or named in strings are skipped

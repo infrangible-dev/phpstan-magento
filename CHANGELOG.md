@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.15
+
+### Added
+
+- `ClassStringInstanceofRule`: an `instanceof` check against a parameter whose `@param` tag declares it as
+  `class-string`, like `@param class-string<T> $className` with `$instance instanceof $className`. PhpStorm then types
+  the checked value as class-string instead of an object of the class and reports "Return value is expected to be
+  'object', '\class-string' returned". Declare the parameter as `string` in `@param` and as class-string in
+  `@phpstan-param`.
+
 ## 1.2.14
 
 ### Added
