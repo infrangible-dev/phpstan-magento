@@ -20,12 +20,12 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
 /**
- * An instanceof check against a parameter whose @param tag declares it as class-string, like
- * `@param class-string<T> $className` with `$instance instanceof $className`.
+ * An instanceof check against a parameter whose param tag declares it as class-string, like the param tag
+ * "class-string<T> $className" with `$instance instanceof $className`.
  *
  * PhpStorm then types the checked variable as class-string instead of an object of the class and reports for example
- * "Return value is expected to be 'object', '\class-string' returned". Declare the parameter as string for PhpStorm
- * and the class-string for PHPStan: `@param string $className` and `@phpstan-param class-string<T> $className`.
+ * "Return value is expected to be 'object', '\class-string' returned". Declare the parameter as string in the param tag
+ * for PhpStorm and as class-string in the phpstan-param tag for PHPStan (with "@" before "param" and "phpstan-param").
  *
  * @implements Rule<Node\FunctionLike>
  */
